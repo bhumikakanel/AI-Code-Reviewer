@@ -19,12 +19,16 @@ export const getReview = async (req, res) => {
         return res.send(response);
 
     } catch (error) {
-    console.error("GEMINI ERROR:");
-    console.error(error);
-    
-    res.status(500).json({
-        message: "Failed to get response from Gemini",
-        error: error.message
-    });
- }
+        console.error("GEMINI ERROR:", error);
+
+        if (error.status === 429) {
+            return res.status(429).json({
+                message: "Gemini rate limit exceeded. Please try again later."
+            });
+        }
+
+        return res.status(500).json({
+            message: "Something went wrong while reviewing the code."
+        });
+    }
 };
