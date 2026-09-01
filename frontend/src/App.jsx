@@ -25,7 +25,7 @@ function App() {
 
     try {
         const response = await axios.post(
-            `${process.env.BACKEND_URL}/ai/get-review`,
+            `${import.meta.env.VITE_BACKEND_URL}/ai/get-review`,
             { code }
         );
         setReview(response.data);
