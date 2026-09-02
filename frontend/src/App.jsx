@@ -21,20 +21,33 @@ function App() {
 
 
   async function reviewCode() {
-    console.log("🟢 Review button clicked");
+  console.log(" Review button clicked");
 
-    try {
-        const response = await axios.post(
-            `${import.meta.env.VITE_BACKEND_URL}/ai/get-review`,
-            { code }
-        );
-        setReview(response.data);
+  try {
+    console.log("Sending code for review...");
 
-        
+    const response = await axios.post(
+      `${import.meta.env.VITE_BACKEND_URL}/ai/get-review`,
+      { code }
+    );
 
-    } catch (error) {
-        console.error("Frontend error:", error);
+    console.log("Review received:", response.data);
+
+    setReview(response.data);
+
+  } catch (error) {
+    console.error("Review error:", error);
+
+    if (error.response?.status === 429) {
+      setReview(
+        "Gemini is temporarily rate-limited. Please try again in a moment."
+      );
+    } else {
+      setReview(
+        "Something went wrong while reviewing the code. Please try again."
+      );
     }
+  }
 }
 
   return (
