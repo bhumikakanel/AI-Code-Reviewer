@@ -2,13 +2,13 @@
 
 An AI-powered code review application that analyzes source code and provides feedback on bugs, code quality, security, performance, and possible improvements.
 
-## 🚀 Live Demo
+##  Live Demo
 
 **Frontend:** https://ai-code-reviewer-fawn-seven.vercel.app/
 
 **Backend:** https://ai-code-reviewer-backend-183742218571.asia-south1.run.app
 
-## ✨ Features
+##  Features
 
 - AI-powered code review
 - Detects potential bugs and code issues
@@ -67,9 +67,6 @@ cd backend
 npm install
 ```
 
-```env
-GOOGLE_GEMINI_KEY=your_gemini_api_key
-```
 
 Start the backend server:
 
@@ -117,7 +114,7 @@ http://localhost:5173
 
 
 
-## 🐳 Docker
+##  Docker
 
 The backend is containerized using Docker so that the application and its dependencies can be packaged into a consistent environment and deployed to Google Cloud Run.
 
@@ -229,7 +226,7 @@ For example, when Gemini is temporarily rate-limited, the frontend displays:
 Gemini is temporarily rate-limited. Please try again in a moment.
 ```
 
-## 🔮 Future Improvements
+##  Future Improvements
 
 - User authentication
 - Review history
