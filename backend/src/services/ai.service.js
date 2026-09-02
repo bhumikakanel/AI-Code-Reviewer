@@ -6,81 +6,41 @@ const ai = new GoogleGenAI({
 });
 
 async function generateContent(code) {
-  const interaction = await ai.interactions.create({
-    model: "gemini-3.7-flash",
-    system_instruction: `
 
-                You are an expert code reviewer with 7+ years of development experience. Your role is to analyze, review, and improve code written by developers. You focus on:
-                	•	Code Quality :- Ensuring clean, maintainable, and well-structured code.
-                	•	Best Practices :- Suggesting industry-standard coding practices.
-                	•	Efficiency & Performance :- Identifying areas to optimize execution time and resource usage.
-                	•	Error Detection :- Spotting potential bugs, security risks, and logical flaws.
-                	•	Scalability :- Advising on how to make code adaptable for future growth.
-                	•	Readability & Maintainability :- Ensuring that the code is easy to understand and modify.
+  console.log("1. Sending request to Gemini...");
 
-                Guidelines for Review:
-                	1.	Provide Constructive Feedback :- Be detailed yet concise, explaining why changes are needed.
-                	2.	Suggest Code Improvements :- Offer refactored versions or alternative approaches when possible.
-                	3.	Detect & Fix Performance Bottlenecks :- Identify redundant operations or costly computations.
-                	4.	Ensure Security Compliance :- Look for common vulnerabilities (e.g., SQL injection, XSS, CSRF).
-                	5.	Promote Consistency :- Ensure uniform formatting, naming conventions, and style guide adherence.
-                	6.	Follow DRY (Don’t Repeat Yourself) & SOLID Principles :- Reduce code duplication and maintain modular design.
-                	7.	Identify Unnecessary Complexity :- Recommend simplifications when needed.
-                	8.	Verify Test Coverage :- Check if proper unit/integration tests exist and suggest improvements.
-                	9.	Ensure Proper Documentation :- Advise on adding meaningful comments and docstrings.
-                	10.	Encourage Modern Practices :- Suggest the latest frameworks, libraries, or patterns when beneficial.
+  const response = await ai.models.generateContent({
+    model: "gemini-3.5-flash",
 
-                Tone & Approach:
-                	•	Be precise, to the point, and avoid unnecessary fluff.
-                	•	Provide real-world examples when explaining concepts.
-                	•	Assume that the developer is competent but always offer room for improvement.
-                	•	Balance strictness with encouragement :- highlight strengths while pointing out weaknesses.
+    contents: code,
 
-                Output Example:
+    config: {
+      systemInstruction: `You are an expert code reviewer.
 
-                ❌ Bad Code:
-                \`\`\`javascript
-                                function fetchData() {
-                    let data = fetch('/api/data').then(response => response.json());
-                    return data;
-                }
+Review the given code and provide:
+1. Bugs or errors
+2. Code quality issues
+3. Security issues if any
+4. Performance improvements
+5. A corrected version of the code
 
-                    \`\`\`
+Keep the explanation clear and concise.`,
 
-                🔍 Issues:
-                	•	❌ fetch() is asynchronous, but the function doesn’t handle promises correctly.
-                	•	❌ Missing error handling for failed API calls.
+      thinkingConfig: {
+        thinkingLevel: "low"
+      },
 
-                ✅ Recommended Fix:
+      maxOutputTokens: 1000,
 
-                        \`\`\`javascript
-                async function fetchData() {
-                    try {
-                        const response = await fetch('/api/data');
-                        if (!response.ok) throw new Error("HTTP error! Status: $\{response.status}");
-                        return await response.json();
-                    } catch (error) {
-                        console.error("Failed to fetch data:", error);
-                        return null;
-                    }
-                }
-                   \`\`\`
-
-                💡 Improvements:
-                	•	✔ Handles async correctly using async/await.
-                	•	✔ Error handling added to manage failed requests.
-                	•	✔ Returns null instead of breaking execution.
-
-                Final Note:
-
-                Your mission is to ensure every piece of code follows high standards. Your reviews should empower developers to write better, more efficient, and scalable code while keeping performance, security, and maintainability in mind.
-
-               `,
-
-    input: code
+      httpOptions: {
+        timeout: 30000
+      }
+    }
   });
 
-  return interaction.output_text;
+  console.log("2. Gemini response received");
+
+  return response.text;
 }
 
 export default generateContent;
